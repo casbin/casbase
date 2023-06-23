@@ -7,15 +7,13 @@ import (
 )
 
 func (c *ApiController) GetGlobalStores() {
-	c.Data["json"] = object.GetGlobalStores()
-	c.ServeJSON()
+	c.ResponseOk(object.GetGlobalStores())
 }
 
 func (c *ApiController) GetStores() {
 	owner := c.Input().Get("owner")
 
-	c.Data["json"] = object.GetStores(owner)
-	c.ServeJSON()
+	c.ResponseOk(object.GetStores(owner))
 }
 
 func (c *ApiController) GetStore() {
@@ -29,8 +27,7 @@ func (c *ApiController) GetStore() {
 
 	store.Populate()
 
-	c.Data["json"] = store
-	c.ServeJSON()
+	c.ResponseOk(store)
 }
 
 func (c *ApiController) UpdateStore() {
@@ -39,31 +36,31 @@ func (c *ApiController) UpdateStore() {
 	var store object.Store
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &store)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.UpdateStore(id, &store)
-	c.ServeJSON()
+	c.ResponseOk(object.UpdateStore(id, &store))
 }
 
 func (c *ApiController) AddStore() {
 	var store object.Store
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &store)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.AddStore(&store)
-	c.ServeJSON()
+	c.ResponseOk(object.AddStore(&store))
 }
 
 func (c *ApiController) DeleteStore() {
 	var store object.Store
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &store)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.DeleteStore(&store)
-	c.ServeJSON()
+	c.ResponseOk(object.DeleteStore(&store))
 }

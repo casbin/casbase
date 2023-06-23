@@ -15,15 +15,13 @@ func (c *ApiController) GetGlobalWordsets() {
 func (c *ApiController) GetWordsets() {
 	owner := c.Input().Get("owner")
 
-	c.Data["json"] = object.GetWordsets(owner)
-	c.ServeJSON()
+	c.ResponseOk(object.GetWordsets(owner))
 }
 
 func (c *ApiController) GetWordset() {
 	id := c.Input().Get("id")
 
-	c.Data["json"] = object.GetWordset(id)
-	c.ServeJSON()
+	c.ResponseOk(object.GetWordset(id))
 }
 
 func (c *ApiController) GetWordsetGraph() {
@@ -31,15 +29,13 @@ func (c *ApiController) GetWordsetGraph() {
 	clusterNumber := util.ParseInt(c.Input().Get("clusterNumber"))
 	distanceLimit := util.ParseInt(c.Input().Get("distanceLimit"))
 
-	c.Data["json"] = object.GetWordsetGraph(id, clusterNumber, distanceLimit)
-	c.ServeJSON()
+	c.ResponseOk(object.GetWordsetGraph(id, clusterNumber, distanceLimit))
 }
 
 func (c *ApiController) GetWordsetMatch() {
 	id := c.Input().Get("id")
 
-	c.Data["json"] = object.GetWordsetMatch(id)
-	c.ServeJSON()
+	c.ResponseOk(object.GetWordsetMatch(id))
 }
 
 func (c *ApiController) UpdateWordset() {
@@ -48,31 +44,30 @@ func (c *ApiController) UpdateWordset() {
 	var wordset object.Wordset
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &wordset)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
-
-	c.Data["json"] = object.UpdateWordset(id, &wordset)
-	c.ServeJSON()
+	c.ResponseOk(object.UpdateWordset(id, &wordset))
 }
 
 func (c *ApiController) AddWordset() {
 	var wordset object.Wordset
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &wordset)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.AddWordset(&wordset)
-	c.ServeJSON()
+	c.ResponseOk(object.AddWordset(&wordset))
 }
 
 func (c *ApiController) DeleteWordset() {
 	var wordset object.Wordset
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &wordset)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.DeleteWordset(&wordset)
-	c.ServeJSON()
+	c.ResponseOk(object.DeleteWordset(&wordset))
 }

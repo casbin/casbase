@@ -20,15 +20,15 @@ class WordsetGraphPage extends React.Component {
     WordsetBackend.getWordset(this.props.account.name, this.state.wordsetName)
       .then((wordset) => {
         this.setState({
-          wordset: wordset,
+          wordset: wordset.data,
         });
       });
   }
 
   render() {
     return (this.state.wordset === undefined || this.state.wordset === null) ? null : (
-      <WordsetGraph wordset={this.state.wordset} wordsetName={this.state.wordset.name}/>
-    )
+      <WordsetGraph wordset={this.state.wordset} wordsetName={this.state.wordset.name} />
+    );
   }
 }
 

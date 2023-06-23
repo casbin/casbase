@@ -20,15 +20,15 @@ class ClusteringPage extends React.Component {
     WordsetBackend.getWordset(Conf.DefaultOwner, Conf.DefaultWordsetName)
       .then((wordset) => {
         this.setState({
-          wordset: wordset,
+          wordset: wordset.data,
         });
       });
   }
 
   render() {
     return (this.state.wordset === undefined || this.state.wordset === null) ? null : (
-      <WordsetGraph wordset={this.state.wordset} wordsetName={this.state.wordset.name}/>
-    )
+      <WordsetGraph wordset={this.state.wordset} wordsetName={this.state.wordset.name} />
+    );
   }
 }
 

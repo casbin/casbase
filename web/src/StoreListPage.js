@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Col, Popconfirm, Row, Table} from 'antd';
+import {Button, Col, Popconfirm, Row, Table} from "antd";
 import moment from "moment";
 import * as Setting from "./Setting";
 import * as StoreBackend from "./backend/StoreBackend";
@@ -23,7 +23,7 @@ class StoreListPage extends React.Component {
     StoreBackend.getGlobalStores()
       .then((res) => {
         this.setState({
-          stores: res,
+          stores: res.data,
         });
       });
   }
@@ -37,17 +37,21 @@ class StoreListPage extends React.Component {
       bucket: "bucket_name",
       domain: "https://cdn.example.com",
       propertiesMap: {},
-    }
+    };
   }
 
   addStore() {
     const newStore = this.newStore();
     StoreBackend.addStore(newStore)
       .then((res) => {
-        Setting.showMessage("success", `Store added successfully`);
-        this.setState({
-          stores: Setting.prependRow(this.state.stores, newStore),
-        });
+        if (res.status === "ok") {
+          Setting.showMessage("success", "Store added successfully");
+          this.setState({
+            stores: Setting.prependRow(this.state.stores, newStore),
+          });
+        } else {
+          Setting.showMessage("error", `Store failed to add: ${res.msg}`);
+        }
       })
       .catch(error => {
         Setting.showMessage("error", `Store failed to add: ${error}`);
@@ -57,10 +61,14 @@ class StoreListPage extends React.Component {
   deleteStore(i) {
     StoreBackend.deleteStore(this.state.stores[i])
       .then((res) => {
-        Setting.showMessage("success", `Store deleted successfully`);
-        this.setState({
-          stores: Setting.deleteRow(this.state.stores, i),
-        });
+        if (res.status === "ok") {
+          Setting.showMessage("success", "Store deleted successfully");
+          this.setState({
+            stores: Setting.deleteRow(this.state.stores, i),
+          });
+        } else {
+          Setting.showMessage("error", `Store failed to delete: ${res.msg}`);
+        }
       })
       .catch(error => {
         Setting.showMessage("error", `Store failed to delete: ${error}`);
@@ -71,69 +79,69 @@ class StoreListPage extends React.Component {
     const columns = [
       {
         title: i18next.t("general:Name"),
-        dataIndex: 'name',
-        key: 'name',
-        width: '300px',
+        dataIndex: "name",
+        key: "name",
+        width: "300px",
         sorter: (a, b) => a.name.localeCompare(b.name),
         render: (text, record, index) => {
           return (
             <Link to={`/stores/${record.owner}/${text}/view`}>
               {text}
             </Link>
-          )
-        }
+          );
+        },
       },
       {
         title: i18next.t("general:Display name"),
-        dataIndex: 'displayName',
-        key: 'displayName',
+        dataIndex: "displayName",
+        key: "displayName",
         // width: '200px',
         sorter: (a, b) => a.displayName.localeCompare(b.displayName),
       },
       {
         title: i18next.t("general:Action"),
-        dataIndex: 'action',
-        key: 'action',
-        width: '240px',
+        dataIndex: "action",
+        key: "action",
+        width: "240px",
         render: (text, record, index) => {
           return (
             <div>
-              <Button style={{marginTop: '10px', marginBottom: '10px', marginRight: '10px'}} onClick={() => this.props.history.push(`/stores/${record.owner}/${record.name}/view`)}>{i18next.t("general:View")}</Button>
+              <Button style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}} onClick={() => this.props.history.push(`/stores/${record.owner}/${record.name}/view`)}>{i18next.t("general:View")}</Button>
               {
                 !Setting.isLocalAdminUser(this.props.account) ? null : (
                   <React.Fragment>
-                    <Button style={{marginBottom: '10px', marginRight: '10px'}} type="primary" onClick={() => this.props.history.push(`/stores/${record.owner}/${record.name}`)}>{i18next.t("general:Edit")}</Button>
+                    <Button style={{marginBottom: "10px", marginRight: "10px"}} type="primary" onClick={() => this.props.history.push(`/stores/${record.owner}/${record.name}`)}>{i18next.t("general:Edit")}</Button>
                     <Popconfirm
                       title={`Sure to delete store: ${record.name} ?`}
                       onConfirm={() => this.deleteStore(index)}
                       okText="OK"
                       cancelText="Cancel"
                     >
-                      <Button style={{marginBottom: '10px'}} type="danger">{i18next.t("general:Delete")}</Button>
+                      <Button style={{marginBottom: "10px"}} type="danger">{i18next.t("general:Delete")}</Button>
                     </Popconfirm>
                   </React.Fragment>
                 )
               }
             </div>
-          )
-        }
+          );
+        },
       },
     ];
 
     return (
       <div>
         <Table columns={columns} dataSource={stores} rowKey="name" size="middle" bordered pagination={{pageSize: 100}}
-               title={() => (
-                 <div>
-                   {i18next.t("general:Stores")}&nbsp;&nbsp;&nbsp;&nbsp;
-                   {
-                     !Setting.isLocalAdminUser(this.props.account) ? null : (
-                       <Button type="primary" size="small" onClick={this.addStore.bind(this)}>{i18next.t("general:Add")}</Button>
-                     )
-                   }
-                 </div>
-               )}
-               loading={stores === null}
+          title={() => (
+            <div>
+              {i18next.t("general:Stores")}&nbsp;&nbsp;&nbsp;&nbsp;
+              {
+                !Setting.isLocalAdminUser(this.props.account) ? null : (
+                  <Button type="primary" size="small" onClick={this.addStore.bind(this)}>{i18next.t("general:Add")}</Button>
+                )
+              }
+            </div>
+          )}
+          loading={stores === null}
         />
       </div>
     );

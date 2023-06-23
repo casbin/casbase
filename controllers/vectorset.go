@@ -7,22 +7,19 @@ import (
 )
 
 func (c *ApiController) GetGlobalVectorsets() {
-	c.Data["json"] = object.GetGlobalVectorsets()
-	c.ServeJSON()
+	c.ResponseOk(object.GetGlobalVectorsets())
 }
 
 func (c *ApiController) GetVectorsets() {
 	owner := c.Input().Get("owner")
 
-	c.Data["json"] = object.GetVectorsets(owner)
-	c.ServeJSON()
+	c.ResponseOk(object.GetVectorsets(owner))
 }
 
 func (c *ApiController) GetVectorset() {
 	id := c.Input().Get("id")
 
-	c.Data["json"] = object.GetVectorset(id)
-	c.ServeJSON()
+	c.ResponseOk(object.GetVectorset(id))
 }
 
 func (c *ApiController) UpdateVectorset() {
@@ -31,31 +28,31 @@ func (c *ApiController) UpdateVectorset() {
 	var vectorset object.Vectorset
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &vectorset)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.UpdateVectorset(id, &vectorset)
-	c.ServeJSON()
+	c.ResponseOk(object.UpdateVectorset(id, &vectorset))
 }
 
 func (c *ApiController) AddVectorset() {
 	var vectorset object.Vectorset
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &vectorset)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.AddVectorset(&vectorset)
-	c.ServeJSON()
+	c.ResponseOk(object.AddVectorset(&vectorset))
 }
 
 func (c *ApiController) DeleteVectorset() {
 	var vectorset object.Vectorset
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &vectorset)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
-	c.Data["json"] = object.DeleteVectorset(&vectorset)
-	c.ServeJSON()
+	c.ResponseOk(object.DeleteVectorset(&vectorset))
 }

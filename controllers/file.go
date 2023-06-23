@@ -19,7 +19,8 @@ func (c *ApiController) UpdateFile() {
 	var file object.File
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &file)
 	if err != nil {
-		panic(err)
+		c.ResponseError(err.Error())
+		return
 	}
 
 	res := object.UpdateFile(storeId, key, &file)
@@ -27,8 +28,7 @@ func (c *ApiController) UpdateFile() {
 		addRecordForFile(c, userName, "Update", storeId, key, "", true)
 	}
 
-	c.Data["json"] = res
-	c.ServeJSON()
+	c.ResponseOk(res)
 }
 
 func (c *ApiController) AddFile() {
@@ -59,8 +59,7 @@ func (c *ApiController) AddFile() {
 		addRecordForFile(c, userName, "Add", storeId, key, filename, isLeaf)
 	}
 
-	c.Data["json"] = res
-	c.ServeJSON()
+	c.ResponseOk(res)
 }
 
 func (c *ApiController) DeleteFile() {
@@ -78,6 +77,5 @@ func (c *ApiController) DeleteFile() {
 		addRecordForFile(c, userName, "Delete", storeId, key, "", isLeaf)
 	}
 
-	c.Data["json"] = res
-	c.ServeJSON()
+	c.ResponseOk(res)
 }
