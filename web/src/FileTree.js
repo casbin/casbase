@@ -68,11 +68,15 @@ class FileTree extends React.Component {
   getPermissions() {
     PermissionBackend.getPermissions(Conf.AuthConfig.organizationName)
       .then((permissions) => {
-        permissions = permissions.filter(permission => (permission.domains[0] === this.props.store.name) && permission.users.length !== 0);
-        this.setState({
-          permissions: permissions,
-          permissionMap: this.getPermissionMap(permissions),
-        });
+        if (permissions.status === "ok") {
+          permissions = permissions.filter(permission => (permission.domains[0] === this.props.store.name) && permission.users.length !== 0);
+          this.setState({
+            permissions: permissions,
+            permissionMap: this.getPermissionMap(permissions),
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get permissions: ${permissions.msg}`);
+        }
       });
   }
 

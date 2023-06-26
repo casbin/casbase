@@ -22,9 +22,13 @@ class StoreListPage extends React.Component {
   getStores() {
     StoreBackend.getGlobalStores()
       .then((res) => {
-        this.setState({
-          stores: res.data,
-        });
+        if (res.status === "ok") {
+          this.setState({
+            stores: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get stores: ${res.msg}`);
+        }
       });
   }
 

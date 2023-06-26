@@ -29,18 +29,26 @@ class WordsetEditPage extends React.Component {
   getWordset() {
     WordsetBackend.getWordset(this.props.account.name, this.state.wordsetName)
       .then((wordset) => {
-        this.setState({
-          wordset: wordset.data,
-        });
+        if (wordset.status === "ok") {
+          this.setState({
+            wordset: wordset.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get wordset: ${wordset.msg}`);
+        }
       });
   }
 
   getVectorsets() {
     VectorsetBackend.getVectorsets(this.props.account.name)
       .then((res) => {
-        this.setState({
-          vectorsets: res.data,
-        });
+        if (res.status === "ok") {
+          this.setState({
+            vectorsets: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get vectorsets: ${res.msg}`);
+        }
       });
   }
 
@@ -115,10 +123,14 @@ class WordsetEditPage extends React.Component {
               });
               WordsetBackend.getWordsetMatch(this.props.account.name, this.state.wordsetName)
                 .then((wordset) => {
-                  this.setState({
-                    wordset: wordset.data,
-                    matchLoading: false,
-                  });
+                  if (wordset.status === "ok") {
+                    this.setState({
+                      wordset: wordset.data,
+                      matchLoading: false,
+                    });
+                  } else {
+                    Setting.showMessage("error", `Failed to get wordset: ${wordset.msg}`);
+                  }
                 });
             }}>{i18next.t("wordset:Match")}</Button>
           </Col>

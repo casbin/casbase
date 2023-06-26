@@ -22,9 +22,13 @@ class WordsetListPage extends React.Component {
   getWordsets() {
     WordsetBackend.getWordsets(this.props.account.name)
       .then((res) => {
-        this.setState({
-          wordsets: res.data,
-        });
+        if (res.status === "ok") {
+          this.setState({
+            wordsets: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get wordsets: ${res.msg}`);
+        }
       });
   }
 

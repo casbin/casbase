@@ -23,9 +23,13 @@ class VideoListPage extends React.Component {
   getVideos() {
     VideoBackend.getVideos(this.props.account.name)
       .then((res) => {
-        this.setState({
-          videos: res.data,
-        });
+        if (res.status === "ok") {
+          this.setState({
+            videos: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get videos: ${res.msg}`);
+        }
       });
   }
 

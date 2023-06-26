@@ -23,9 +23,13 @@ class VectorsetEditPage extends React.Component {
   getVectorset() {
     VectorsetBackend.getVectorset(this.props.account.name, this.state.vectorsetName)
       .then((vectorset) => {
-        this.setState({
-          vectorset: vectorset.data,
-        });
+        if (vectorset.status === "ok") {
+          this.setState({
+            vectorset: vectorset.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get vectorset: ${vectorset.msg}`);
+        }
       });
   }
 
