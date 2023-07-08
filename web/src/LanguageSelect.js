@@ -60,37 +60,6 @@ class LanguageSelect extends React.Component {
         </div>
       </Dropdown>
     );
-
-    // const menu = (
-    //   <Menu onClick={this.handleLanguageSelect.bind(this)}>
-    //     <Menu.Item key="zh">
-    //       <SettingOutlined />
-    //       {i18next.t("account:My Account")}
-    //     </Menu.Item>
-    //     <Menu.Item key="/logout">
-    //       <LogoutOutlined />
-    //       {i18next.t("account:Sign Out")}
-    //     </Menu.Item>
-    //   </Menu>
-    // );
-
-    // return (
-    //   <Dropdown key="/rightDropDown" overlay={menu} className="rightDropDown">
-    //     <div className="ant-dropdown-link" style={{float: "right", cursor: "pointer"}}>
-    //       &nbsp;
-    //       &nbsp;
-    //       {
-    //         this.renderAvatar()
-    //       }
-    //       &nbsp;
-    //       &nbsp;
-    //       {Setting.isMobile() ? null : Setting.getShortName(this.state.account.displayName)} &nbsp; <DownOutlined/>
-    //       &nbsp;
-    //       &nbsp;
-    //       &nbsp;
-    //     </div>
-    //   </Dropdown>
-    // );
   }
 }
 
